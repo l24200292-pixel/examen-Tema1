@@ -198,3 +198,118 @@ function dibujar(){
 }
 
 dibujar();
+/* =========================
+   PUENTE DETALLADO
+=========================*/
+function dibujarPuente(){
+
+    // Base superior del puente
+    ctx.fillStyle = "#a8a8a8";
+    ctx.fillRect(0,390,800,30);
+
+    // Línea superior barandal
+    ctx.strokeStyle = "#e8e2a8";
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(0,390);
+    ctx.lineTo(800,390);
+    ctx.stroke();
+
+    // Arco central grande
+    ctx.beginPath();
+    ctx.arc(400,420,90,Math.PI,0);
+    ctx.fillStyle="#bdbdbd";
+    ctx.fill();
+
+    // Arco izquierdo
+    ctx.beginPath();
+    ctx.arc(200,420,75,Math.PI,0);
+    ctx.fill();
+
+    // Arco derecho
+    ctx.beginPath();
+    ctx.arc(600,420,75,Math.PI,0);
+    ctx.fill();
+
+    // Torre central
+    ctx.fillStyle="#e8e2a8";
+    ctx.fillRect(395,310,10,80);
+
+    // Cables diagonales
+    ctx.strokeStyle="#e8e2a8";
+    ctx.lineWidth=4;
+
+    ctx.beginPath();
+    ctx.moveTo(400,310);
+    ctx.lineTo(200,390);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(400,310);
+    ctx.lineTo(600,390);
+    ctx.stroke();
+
+    // Cables internos adicionales
+    ctx.lineWidth=2;
+
+    for(let i=1;i<=4;i++){
+        ctx.beginPath();
+        ctx.moveTo(400,310);
+        ctx.lineTo(400 - i*40,390);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(400,310);
+        ctx.lineTo(400 + i*40,390);
+        ctx.stroke();
+    }
+}
+
+/* =========================
+   RÍO CON REFLEJO REALISTA
+=========================*/
+function dibujarRio(){
+
+    // Agua base
+    ctx.fillStyle="#4ea8de";
+    ctx.fillRect(0,420,800,130);
+
+    // Reflejo del arco central
+    ctx.beginPath();
+    ctx.arc(400,420,90,0,Math.PI);
+    ctx.fillStyle="rgba(255,255,255,0.08)";
+    ctx.fill();
+
+    // Líneas horizontales de agua
+    ctx.strokeStyle="#90e0ef";
+    ctx.lineWidth=2;
+
+    for(let i=0;i<40;i++){
+        ctx.beginPath();
+        ctx.moveTo(Math.random()*800,450+Math.random()*90);
+        ctx.lineTo(Math.random()*800,450+Math.random()*90);
+        ctx.stroke();
+    }
+}
+
+function barco(x,y){
+
+    // Base
+    ctx.fillStyle="#1b263b";
+    ctx.beginPath();
+    ctx.moveTo(x,y);
+    ctx.lineTo(x+120,y);
+    ctx.lineTo(x+95,y+30);
+    ctx.lineTo(x+25,y+30);
+    ctx.closePath();
+    ctx.fill();
+
+    // Cabina
+    ctx.fillStyle="#f8e16c";
+    ctx.fillRect(x+45,y-25,35,25);
+
+    // Línea superior
+    ctx.strokeStyle="#000";
+    ctx.lineWidth=2;
+    ctx.stroke();
+}
