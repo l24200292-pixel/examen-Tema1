@@ -1,9 +1,8 @@
 body{
-    background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+    background: linear-gradient(to right, #141e30, #243b55);
     color: white;
 }
 
 canvas{
-    background-color: #0b1d3a;
-    border-radius: 10px;
+    background-color: #1c2541;
 }

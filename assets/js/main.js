@@ -1,145 +1,139 @@
-/************************************************************
- Aplicación: Noche Estrellada - Interpretación Canvas 2D
+/**************************************************************
+ Aplicación: Ciudad Nocturna Moderna
  Autor: ANAHI
  Materia: Graficación por Computadora
  Descripción:
- Reinterpretación programada utilizando más de 60
- figuras básicas (arcos, líneas, rectángulos, curvas).
- Fecha: 2026
-*************************************************************/
+ Reinterpretación programada de una ciudad nocturna con:
+ - Rascacielos
+ - Puente
+ - Río
+ - Barcos
+ - Luna
+ - Estrellas
+ Más de 150 figuras básicas
+**************************************************************/
 
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
-/* ==============================
-   1. FONDO NOCTURNO
-==============================*/
+/* =========================
+   1. CIELO
+=========================*/
 function dibujarCielo(){
-    ctx.fillStyle = "#0b1d3a";
-    ctx.fillRect(0,0,700,500);
+    ctx.fillStyle="#1c2541";
+    ctx.fillRect(0,0,800,550);
 }
 
-/* ==============================
-   2. LUNA
-==============================*/
-function dibujarLuna(){
-    ctx.beginPath();
-    ctx.fillStyle = "#FFD700";
-    ctx.arc(600,100,60,0,Math.PI*2);
-    ctx.fill();
-
-    // Detalles circulares
-    for(let i=0;i<10;i++){
-        ctx.beginPath();
-        ctx.strokeStyle = "#fce570";
-        ctx.arc(600,100,20 + i*5,0,Math.PI*2);
-        ctx.stroke();
+/* =========================
+   2. ESTRELLAS
+=========================*/
+function dibujarEstrellas(){
+    for(let i=0;i<60;i++){
+        ctx.fillStyle="#f5f3ce";
+        ctx.fillRect(Math.random()*800,Math.random()*250,3,3);
     }
 }
 
-/* ==============================
-   3. ESTRELLAS EN ESPIRAL
-==============================*/
-function dibujarEstrellas(){
-    for(let s=0; s<15; s++){
-        let x = Math.random()*650;
-        let y = Math.random()*250;
+/* =========================
+   3. LUNA
+=========================*/
+function dibujarLuna(){
+    ctx.beginPath();
+    ctx.fillStyle="#f5e6a9";
+    ctx.arc(700,100,40,0,Math.PI*2);
+    ctx.fill();
 
-        ctx.beginPath();
-        ctx.fillStyle = "#fffacd";
-        ctx.arc(x,y,5,0,Math.PI*2);
-        ctx.fill();
+    ctx.beginPath();
+    ctx.fillStyle="#1c2541";
+    ctx.arc(715,90,35,0,Math.PI*2);
+    ctx.fill();
+}
 
-        for(let i=0;i<5;i++){
-            ctx.beginPath();
-            ctx.strokeStyle = "#ffff99";
-            ctx.arc(x,y,10 + i*5,0,Math.PI*2);
-            ctx.stroke();
+/* =========================
+   4. EDIFICIOS
+=========================*/
+function edificio(x,y,w,h,color){
+    ctx.fillStyle=color;
+    ctx.fillRect(x,y,w,h);
+
+    // ventanas
+    for(let i=0;i<5;i++){
+        for(let j=0;j<3;j++){
+            ctx.fillStyle="#f8e16c";
+            ctx.fillRect(x+10+j*15,y+10+i*20,8,10);
         }
     }
 }
 
-/* ==============================
-   4. REMOLINOS DEL CIELO
-==============================*/
-function dibujarRemolinos(){
-    ctx.strokeStyle = "#3fa9f5";
-    ctx.lineWidth = 3;
+function dibujarEdificios(){
+    edificio(50,250,80,200,"#5f6caf");
+    edificio(150,220,90,230,"#4ea8de");
+    edificio(260,260,70,190,"#3a86ff");
+    edificio(350,200,100,250,"#5f6caf");
+    edificio(480,230,90,220,"#4ea8de");
+    edificio(600,260,70,190,"#3a86ff");
+}
 
-    for(let i=0;i<20;i++){
-        ctx.beginPath();
-        ctx.arc(350,200,20 + i*8,0,Math.PI*1.5);
-        ctx.stroke();
+/* =========================
+   5. PUENTE
+=========================*/
+function dibujarPuente(){
+    ctx.fillStyle="#b0b0b0";
+    ctx.fillRect(0,400,800,40);
+
+    ctx.beginPath();
+    ctx.arc(200,440,60,Math.PI,0);
+    ctx.arc(400,440,60,Math.PI,0);
+    ctx.arc(600,440,60,Math.PI,0);
+    ctx.fill();
+}
+
+/* =========================
+   6. RÍO
+=========================*/
+function dibujarRio(){
+    ctx.fillStyle="#4ea8de";
+    ctx.fillRect(0,440,800,110);
+
+    for(let i=0;i<40;i++){
+        ctx.fillStyle="#90e0ef";
+        ctx.fillRect(Math.random()*800,450+Math.random()*80,30,2);
     }
 }
 
-/* ==============================
-   5. MONTAÑAS
-==============================*/
-function dibujarMontanas(){
-    ctx.fillStyle = "#1c2f4a";
-
+/* =========================
+   7. BARCOS
+=========================*/
+function barco(x,y){
+    ctx.fillStyle="#1b263b";
     ctx.beginPath();
-    ctx.moveTo(0,350);
-    ctx.lineTo(200,250);
-    ctx.lineTo(400,350);
+    ctx.moveTo(x,y);
+    ctx.lineTo(x+80,y);
+    ctx.lineTo(x+60,y+20);
+    ctx.lineTo(x+20,y+20);
+    ctx.closePath();
     ctx.fill();
 
-    ctx.beginPath();
-    ctx.moveTo(300,350);
-    ctx.lineTo(500,270);
-    ctx.lineTo(700,350);
-    ctx.fill();
+    ctx.fillStyle="#f8e16c";
+    ctx.fillRect(x+30,y-15,20,15);
 }
 
-/* ==============================
-   6. PUEBLO
-==============================*/
-function dibujarPueblo(){
-    ctx.fillStyle = "#2f4f4f";
-
-    for(let i=0;i<10;i++){
-        ctx.fillRect(50 + i*60,370,40,50);
-
-        // Ventanas
-        ctx.fillStyle = "#ffd700";
-        ctx.fillRect(60 + i*60,385,10,10);
-        ctx.fillRect(75 + i*60,400,10,10);
-        ctx.fillStyle = "#2f4f4f";
-    }
-
-    // Torre iglesia
-    ctx.beginPath();
-    ctx.moveTo(350,330);
-    ctx.lineTo(370,250);
-    ctx.lineTo(390,330);
-    ctx.fill();
+function dibujarBarcos(){
+    barco(150,500);
+    barco(500,500);
 }
 
-/* ==============================
-   7. ÁRBOL OSCURO
-==============================*/
-function dibujarArbol(){
-    ctx.fillStyle = "#0a0a0a";
-
-    ctx.beginPath();
-    ctx.moveTo(100,450);
-    ctx.lineTo(130,200);
-    ctx.lineTo(160,450);
-    ctx.fill();
-}
-
-/* ==============================
+/* =========================
    FUNCIÓN PRINCIPAL
-==============================*/
+=========================*/
 function dibujar(){
     dibujarCielo();
-    dibujarLuna();
     dibujarEstrellas();
-    dibujarRemolinos();
-    dibujarMontanas();
-    dibujarPueblo();
-    dibujarArbol();
+    dibujarLuna();
+    dibujarEdificios();
+    dibujarPuente();
+    dibujarRio();
+    dibujarBarcos();
 }
 
 dibujar();
