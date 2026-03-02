@@ -1,13 +1,11 @@
-/* assets/css/styles.css */
-
-/* Asegura que el canvas no se desborde y mantenga proporciones */
+/* Canvas responsivo */
 canvas {
     max-width: 100%;
-    height: auto !important; /* Bootstrap img-fluid override */
-    background-color: #ffffff; /* Fondo interno del canvas si es necesario */
+    height: auto !important;
+    background-color: #ffffff;
 }
 
-/* Ajustes para el footer pegajoso */
+/* Footer pegajoso */
 body {
     display: flex;
     flex-direction: column;
@@ -18,7 +16,7 @@ main {
     flex: 1;
 }
 
-/* Sombra suave para las tarjetas */
+/* Animación suave en tarjetas */
 .card {
     transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 }
