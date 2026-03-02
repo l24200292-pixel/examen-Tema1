@@ -1,8 +1,14 @@
 /* assets/css/styles.css */
 
+/* Asegura que el canvas no se desborde y mantenga proporciones */
+canvas {
+    max-width: 100%;
+    height: auto !important; /* Bootstrap img-fluid override */
+    background-color: #ffffff; /* Fondo interno del canvas si es necesario */
+}
+
+/* Ajustes para el footer pegajoso */
 body {
-    background-color: #f8f9fa;
-    padding-top: 56px; /* Espacio para la navbar fija */
     display: flex;
     flex-direction: column;
     min-height: 100vh;
@@ -12,24 +18,12 @@ main {
     flex: 1;
 }
 
-.canvas-container {
-    background-color: white;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    text-align: center;
+/* Sombra suave para las tarjetas */
+.card {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 }
 
-canvas, .img-reference {
-    border: 2px solid #343a40;
-    max-width: 100%;
-    height: auto;
-    background-color: white;
-}
-
-footer {
-    background-color: #343a40;
-    color: white;
-    padding: 1rem 0;
-    margin-top: auto;
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
 }
