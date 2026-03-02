@@ -1,201 +1,123 @@
-/**
- * RECREACIÓN DE IMAGEN GEOMÉTRICA - VERSIÓN FINAL Y COMPLETA
- * Programadora: ANAHI DIAZ ROSALES
- * * Correcciones realizadas:
- * 1. Nubes: Ahora compuestas por múltiples círculos superpuestos y posicionadas igual que la referencia.
- * 2. Hojas laterales: Ajustadas en forma y color.
- * 3. Hojas y detalles de la rama: Añadidos todos los óvalos y triángulos pequeños.
- * 4. Pájaro: Ajuste de proporciones en el ojo y posicionamiento de patas.
- */
-
 "use strict";
 
 document.addEventListener("DOMContentLoaded", () => {
-    // 1. Configuración Inicial del Canvas
     const canvas = document.getElementById('mainCanvas');
-    if (!canvas) {
-        console.error("No se pudo encontrar el elemento canvas.");
-        return;
-    }
     const ctx = canvas.getContext('2d');
+    const W = canvas.width;
+    const H = canvas.height;
 
-    // Dimensiones lógicas del canvas
-    const W = canvas.width;  // 800
-    const H = canvas.height; // 450
-
-    // Paleta de Colores Exacta con Transparencias (RGBA)
     const COLORES = {
         sky_bg: '#E0F1F9',
-        sky_sun_circle: 'rgba(180, 220, 240, 0.4)', // Círculo grande de fondo
-        sky_cloud: 'rgba(255, 255, 255, 0.7)', // Nubes translúcidas
-        veg_light: 'rgba(165, 214, 167, 0.5)', // Verde claro translúcido
-        veg_dark: 'rgba(76, 175, 80, 0.4)',    // Verde oscuro translúcido
-        leaf_solid: '#7CB342', // Verde sólido para hojas pequeñas
+        sky_cloud: 'rgba(255, 255, 255, 0.7)',
+        veg_light: 'rgba(165, 214, 167, 0.6)',
+        veg_li: 'rgba(146, 211, 24, 0.6)',
+        veg_dark: 'rgba(76, 175, 80, 0.5)',
         branch: '#8D6E63',
-        branch_dark: '#6D4C41', // Marrón oscuro para patas
-        bird_body: '#1E88E5',
-        bird_head: '#FF9800',
+        leaf: '#7CB342',
+        bird_blue: '#1E88E5',
+        bird_orange: '#FF9800',
         bird_beak: '#FF5722',
-        bird_eye_iris: '#1A237E',
         bird_feet: '#FBC02D',
-        white: '#ffffff',
         black: '#000000'
     };
 
-    // ==========================================================================
-    // FUNCIONES AUXILIARES DE DIBUJO
-    // ==========================================================================
-
-    function drawTriangle(x1, y1, x2, y2, x3, y3, color) {
-        ctx.fillStyle = color;
+    // --- FUNCIÓN DE DIBUJO ---
+    function drawShape(type, config) {
+        ctx.save();
+        ctx.fillStyle = config.col;
+        ctx.strokeStyle = COLORES.black;
+        ctx.lineWidth = config.border ? 2 : 0;
         ctx.beginPath();
-        ctx.moveTo(x1, y1);
-        ctx.lineTo(x2, y2);
-        ctx.lineTo(x3, y3);
-        ctx.closePath();
+
+        if (type === 'oval') {
+            ctx.translate(config.x, config.y);
+            ctx.rotate(config.rot || 0);
+            ctx.ellipse(0, 0, config.rx, config.ry, 0, 0, Math.PI * 2);
+        } else if (type === 'tri') {
+            ctx.moveTo(config.x1, config.y1);
+            ctx.lineTo(config.x2, config.y2);
+            ctx.lineTo(config.x3, config.y3);
+            ctx.closePath();
+        } else if (type === 'semi') {
+            ctx.translate(config.x, config.y);
+            ctx.rotate(config.rot || 0);
+            ctx.arc(0, 0, config.r, 0, Math.PI, false);
+            ctx.closePath();
+        }
+        
         ctx.fill();
+        if (config.border) ctx.stroke();
+        ctx.restore();
     }
 
-    function drawOval(x, y, radiusX, radiusY, rotation, color) {
-        ctx.fillStyle = color;
-        ctx.beginPath();
-        ctx.ellipse(x, y, radiusX, radiusY, rotation, 0, Math.PI * 2);
-        ctx.fill();
-    }
-
-    function drawCircle(x, y, radio, color) {
-        ctx.fillStyle = color;
-        ctx.beginPath();
-        ctx.arc(x, y, radio, 0, Math.PI * 2);
-        ctx.fill();
-    }
-
-    // ==========================================================================
-    // FUNCIONES DE RENDERIZADO (POR CAPAS)
-    // ==========================================================================
-
-    // --- CAPA 1: FONDO, SOL Y NUBES COMPLETAS ---
-    function drawCompleteBackground() {
-        // Cielo base
-        ctx.fillStyle = COLORES.sky_bg;
-        ctx.fillRect(0, 0, W, H);
-        
-        // Círculo grande translúcido de fondo (Sol difuminado)
-        drawCircle(220, 220, 120, COLORES.sky_sun_circle);
-
-        // NUBES COMPUESTAS (Varios círculos superpuestos)
-        ctx.fillStyle = COLORES.sky_cloud;
-
-        // Nube Izquierda (Formada por 2 círculos)
-        drawCircle(80, 150, 40, COLORES.sky_cloud);
-        drawCircle(120, 160, 30, COLORES.sky_cloud);
-
-        // Nube Derecha (Formada por 3 círculos)
-        drawCircle(700, 100, 45, COLORES.sky_cloud);
-        drawCircle(750, 120, 35, COLORES.sky_cloud);
-        drawCircle(660, 130, 25, COLORES.sky_cloud);
-    }
-
-    // --- CAPA 2: VEGETACIÓN LATERAL AJUSTADA ---
-    function drawSideVegetation() {
-        // Lado Izquierdo (Hojas translúcidas altas)
-        drawOval(50, 400, 40, 120, 0.1, COLORES.veg_dark);
-        drawOval(100, 420, 35, 100, -0.1, COLORES.veg_light);
-        drawOval(20, 450, 50, 150, 0, COLORES.veg_light);
-
-        // Lado Derecho (Grupo de hojas translúcidas)
-        drawOval(750, 380, 40, 130, -0.2, COLORES.veg_dark);
-        drawOval(700, 420, 30, 90, 0.2, COLORES.veg_light);
-        drawOval(780, 400, 45, 140, 0, COLORES.veg_dark);
-        
-        // Pequeño triángulo de brillo en la esquina superior derecha de la vegetación
-        drawTriangle(750, 350, 755, 360, 745, 360, COLORES.white);
-        drawTriangle(750, 370, 755, 360, 745, 360, COLORES.white);
-    }
-
-    // --- CAPA 3: RAMA CON TODOS SUS DETALLES (HOJAS Pequeñas Y TRIÁNGULOS) ---
-    function drawDetailedBranch() {
-        const xRama = 550; // Punto de referencia alineado con el pájaro
-        const yRama = 260;
-
-        // Rama principal horizontal
-        ctx.fillStyle = COLORES.branch;
-        ctx.fillRect(xRama - 80, yRama + 105, 300, 10);
-        
-        // Ramita inclinada secundaria hacia arriba-derecha
-        ctx.lineWidth = 8;
-        ctx.strokeStyle = COLORES.branch;
-        ctx.beginPath();
-        ctx.moveTo(xRama + 150, yRama + 110);
-        ctx.lineTo(xRama + 200, yRama + 70);
-        ctx.stroke();
-
-        // DETALLES FINOS DE LA RAMA (Hojas pequeñas y triángulos)
-        ctx.fillStyle = COLORES.leaf_solid;
-        
-        // Hojas ovaladas en la ramita inclinada
-        drawOval(xRama + 210, yRama + 60, 15, 25, Math.PI/4, COLORES.leaf_solid);
-        drawOval(xRama + 180, yRama + 85, 12, 20, Math.PI/3, COLORES.leaf_solid);
-
-        // Triángulos verdes pequeños "creciendo" de la rama
-        drawTriangle(xRama + 130, yRama + 90, xRama + 140, yRama + 95, xRama + 130, yRama + 100, COLORES.leaf_solid);
-        drawTriangle(xRama + 170, yRama + 120, xRama + 180, yRama + 125, xRama + 170, yRama + 130, COLORES.leaf_solid);
-        drawTriangle(xRama + 220, yRama + 110, xRama + 230, yRama + 115, xRama + 220, yRama + 120, COLORES.leaf_solid);
-    }
-
-    // --- CAPA 4: EL PÁJARO GEOMÉTRICO COMPLETO ---
-    function drawCompleteBird() {
-        const x = 550; // Punto central del cuerpo
-        const y = 260;
-
-        // 1. Cola (Detrás del cuerpo) - 4 plumas
-        drawOval(x - 95, y + 15, 15, 50, Math.PI / 1.2, COLORES.bird_tail_1 || '#2E7D32'); // Usando fallback si no definidos
-        drawOval(x - 85, y + 35, 15, 50, Math.PI / 1.4, COLORES.bird_tail_2 || '#FBC02D');
-        drawOval(x - 65, y + 50, 15, 50, Math.PI / 1.6, COLORES.bird_tail_3 || '#0288D1');
-        drawOval(x - 45, y + 60, 15, 50, Math.PI / 1.8, COLORES.bird_tail_4 || '#8BC34A');
-
-        // 2. Patas (Delante de la cola, detrás del cuerpo)
-        ctx.strokeStyle = COLORES.branch_dark;
-        ctx.lineWidth = 4;
-        ctx.beginPath(); ctx.moveTo(x - 10, y + 50); ctx.lineTo(x - 15, y + 105); ctx.stroke();
-        ctx.beginPath(); ctx.moveTo(x + 30, y + 50); ctx.lineTo(x + 35, y + 105); ctx.stroke();
-
-        // Pies (Triángulos amarillos)
-        drawTriangle(x-25, 105+y, x-5, 105+y, x-15, 120+y, COLORES.bird_feet);
-        drawTriangle(x+25, 105+y, x+45, 105+y, x+35, 120+y, COLORES.bird_feet);
-
-        // 3. Cuerpo (Círculo completo azul)
-        drawCircle(x, y, 75, COLORES.bird_body);
-
-        // 4. Alas (Óvalos rotados sobre el cuerpo) - 3 plumas
-        drawOval(x - 25, y - 30, 30, 65, -Math.PI / 4, COLORES.bird_wing_1 || '#4CAF50');
-        drawOval(x - 10, y - 10, 30, 65, -Math.PI / 6, COLORES.bird_wing_2 || '#FBC02D');
-        drawOval(x + 5, y + 15, 30, 65, -Math.PI / 12, COLORES.bird_wing_3 || '#03A9F4');
-        
-        // Triángulo pequeño amarillo de detalle en el ala superior
-        drawTriangle(x+10, y-10, x+35, y-25, x+30, y+5, COLORES.bird_wing_2 || '#FBC02D');
-
-        // 5. Cabeza (Círculo naranja)
-        drawCircle(x + 65, y - 55, 42, COLORES.bird_head);
-
-        // 6. Pico (Triángulo naranja-rojizo largo)
-        drawTriangle(x + 95, y - 65, x + 95, y - 40, x + 140, y - 52, COLORES.bird_beak);
-
-        // 7. Ojo detallado (Ajuste de proporciones)
-        drawCircle(x + 80, y - 65, 16, COLORES.white); // Fondo blanco
-        drawCircle(x + 80, y - 65, 10, COLORES.bird_eye_iris); // Iris azul oscuro
-        drawCircle(x + 80, y - 65, 5, COLORES.black); // Pupila negra
-        drawCircle(x + 83, y - 68, 3, COLORES.white); // Brillo blanco superior
-    }
-
-    // ==========================================================================
-    // EJECUCIÓN PRINCIPAL (Renderizado Secuencial)
-    // ==========================================================================
+    // --- 1. FONDO Y NUBES ---
+    ctx.fillStyle = COLORES.sky_bg;
+    ctx.fillRect(0, 0, W, H);
+    ctx.fillRect(0,0,W);
     
-    // El orden de las llamadas define qué elemento tapa a cuál.
-    drawCompleteBackground();    // Capa más lejana (Cielo, Sol, Nubes)
-    drawSideVegetation();        // Capa media (Hojas translúcidas laterales)
-    drawDetailedBranch();        // Capa media (Rama con todos sus detalles finos)
-    drawCompleteBird();          // Capa más cercana (Pájaro completo con su ojo detallado)
+    ctx.fillStyle = COLORES.sky_cloud;
+    [[110,130,40], [150,140,30], [80,150,25], [700,100,45], [740,120,35]].forEach(n => {
+        ctx.beginPath(); ctx.arc(n[0], n[1], n[2], 0, Math.PI*2); ctx.fill();
+    });
 
+    // --- 2. VEGETACIÓN DE ESQUINAS (DIFERENTES MODELOS Y COLORES) ---
+    // Esquina Izquierda (Variedad de formas)
+    drawShape('oval', {x: 40, y: 420, rx: 50, ry: 160, rot: 0.2, col: COLORES.veg_dark}); // Grande oscura
+    drawShape('oval', {x: 90, y: 440, rx: 30, ry: 100, rot: -0.1, col: COLORES.veg_light}); // Mediana clara
+    drawShape('oval', {x: 140, y: 460, rx: 20, ry: 80, rot: 0.3, col: COLORES.veg_li});    // Pequeña lima
+    drawShape('oval', {x: 20, y: 380, rx: 35, ry: 130, rot: -0.05, col: COLORES.veg_li}); // Larga lima
+    
+    // Esquina Derecha (Variedad de formas)
+    drawShape('oval', {x: 760, y: 410, rx: 55, ry: 170, rot: -0.2, col: COLORES.veg_dark}); // Muy grande
+    drawShape('oval', {x: 700, y: 430, rx: 35, ry: 110, rot: 0.15, col: COLORES.veg_li});   // Color lima
+    drawShape('oval', {x: 650, y: 450, rx: 25, ry: 90, rot: 0.4, col: COLORES.veg_light});  // Pequeña clara
+    drawShape('oval', {x: 790, y: 350, rx: 30, ry: 120, rot: 0, col: COLORES.veg_dark});    // Alta oscura
+
+    // --- 3. RAMA Y HOJAS (TUS POSICIONES ORIGINALES) ---
+    ctx.fillStyle = COLORES.branch;
+    ctx.fillRect(350, 360, 320, 10);
+    ctx.strokeStyle = COLORES.black;
+    ctx.lineWidth = 2;
+    ctx.strokeRect(350, 360, 320, 10);
+
+    ctx.strokeStyle = COLORES.branch;
+    ctx.lineWidth = 8;
+    ctx.beginPath(); ctx.moveTo(590, 365); ctx.lineTo(650, 290); ctx.stroke();
+
+    const h = COLORES.leaf;
+    drawShape('oval', {x: 655, y: 285, rx: 10, ry: 25, rot: 0.8, col: h, border: true});
+    drawShape('oval', {x: 620, y: 290, rx: 10, ry: 20, rot: -0.5, col: h, border: true});
+    drawShape('oval', {x: 605, y: 310, rx: 10, ry: 20, rot: -0.5, col: h, border: true});
+    drawShape('oval', {x: 658, y: 315, rx: 10, ry: 20, rot: 1.6, col: h, border: true});
+    drawShape('oval', {x: 640, y: 338, rx: 10, ry: 20, rot: 1.6, col: h, border: true});
+
+    // Círculo azul de fondo
+    ctx.fillStyle = 'rgba(124, 203, 243, 0.4)';
+    ctx.beginPath();
+    ctx.arc(300, 150, 85, 0, Math.PI * 2); 
+    ctx.fill();
+
+    // --- 4. EL PÁJARO ACOMODADO ---
+    const pX = 510, pY = 270;
+
+    drawShape('semi', {x: pX - 45, y: pY + 20, r: 50, rot: 2.6, col: '#2E7D32', border: true});
+    drawShape('semi', {x: pX - 35, y: pY + 35, r: 50, rot: 2.0, col: '#FBC02D', border: true});
+    drawShape('semi', {x: pX - 25, y: pY + 50, r: 50, rot: 1.6, col: '#0288D1', border: true});
+
+    ctx.strokeStyle = COLORES.black;
+    ctx.lineWidth = 4;
+    ctx.beginPath(); ctx.moveTo(pX - 15, pY + 40); ctx.lineTo(pX - 20, 360); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(pX + 35, pY + 40); ctx.lineTo(pX + 40, 360); ctx.stroke();
+    drawShape('tri', {x1: pX-40, y1: 360, x2: pX-10, y2: 360, x3: pX-22, y3: 375, col: COLORES.bird_feet, border: true});
+    drawShape('tri', {x1: pX+25, y1: 360, x2: pX+50, y2: 360, x3: pX+37, y3: 375, col: COLORES.bird_feet, border: true});
+
+    drawShape('semi', {x: pX, y: pY, r: 85, col: COLORES.bird_blue, border: true});
+    drawShape('semi', {x: pX, y: pY, r: 75, rot: -0.8, col: '#4CAF50', border: true});
+    drawShape('semi', {x: pX + 10, y: pY + 5, r: 65, rot: -0.4, col: '#FBC02D', border: true});
+
+    const hX = pX + 70, hY = pY - 50;
+    drawShape('oval', {x: hX, y: hY, rx: 48, ry: 48, col: COLORES.bird_orange, border: true});
+    drawShape('oval', {x: hX + 15, y: hY - 15, rx: 16, ry: 16, col: 'white', border: true});
+    drawShape('oval', {x: hX + 15, y: hY - 15, rx: 8, ry: 8, col: '#1A237E'});
+    drawShape('tri', {x1: hX + 40, y1: hY - 15, x2: hX + 40, y2: hY + 15, x3: hX + 90, y3: hY, col: COLORES.bird_beak, border: true});
 });
