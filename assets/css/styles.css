@@ -1,9 +1,35 @@
+/* assets/css/styles.css */
+
 body {
-    background: linear-gradient(to right, #e6f2e6, #ffffff);
+    background-color: #f8f9fa;
+    padding-top: 56px; /* Espacio para la navbar fija */
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
-canvas {
-    border: 4px solid #2e7d32;
-    border-radius: 12px;
-    background-color: #f5f5dc;
+main {
+    flex: 1;
+}
+
+.canvas-container {
+    background-color: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+canvas, .img-reference {
+    border: 2px solid #343a40;
+    max-width: 100%;
+    height: auto;
+    background-color: white;
+}
+
+footer {
+    background-color: #343a40;
+    color: white;
+    padding: 1rem 0;
+    margin-top: auto;
 }
