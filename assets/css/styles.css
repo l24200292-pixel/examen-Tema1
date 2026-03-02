@@ -1,8 +1,13 @@
 body{
-    background: linear-gradient(to right, #141e30, #243b55);
-    color: white;
+    margin:0;
+    background:#0b0f2a;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
 }
 
 canvas{
-    background-color: #1c2541;
+    background:#1b2550;
+    border-radius:8px;
 }

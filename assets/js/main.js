@@ -1,315 +1,126 @@
-/**************************************************************
- Aplicación: Ciudad Nocturna Moderna con Puente
- Autor: ANAHI
- Materia: Graficación por Computadora
- Descripción:
- Reinterpretación detallada de ciudad nocturna con:
- - Rascacielos variados
- - Puente arqueado con cables
- - Río con reflejo
- - Barcos
- - Luna creciente
- - Estrellas tipo cruz y líneas
- Más de 200 figuras básicas
-**************************************************************/
-
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
-/* =========================
-   1. CIELO
-=========================*/
-function dibujarCielo(){
-    let grad = ctx.createLinearGradient(0,0,0,550);
-    grad.addColorStop(0,"#1a1f4a");
-    grad.addColorStop(1,"#0f3460");
-    ctx.fillStyle = grad;
-    ctx.fillRect(0,0,800,550);
+canvas.width = 900;
+canvas.height = 500;
+
+const W = canvas.width;
+const H = canvas.height;
+
+/* ================= CIELO ================= */
+ctx.fillStyle = "#1b2550";
+ctx.fillRect(0,0,W,H);
+
+/* ================= ESTRELLAS ================= */
+ctx.fillStyle = "#f5e6a8";
+for(let i=0;i<40;i++){
+  let x = Math.random()*W;
+  let y = Math.random()*200;
+  ctx.fillRect(x,y,3,3);
 }
 
-/* =========================
-   2. ESTRELLAS TIPO CRUZ
-=========================*/
-function estrella(x,y){
-    ctx.fillStyle="#f5e6a9";
-    ctx.fillRect(x,y,3,3);
-    ctx.fillRect(x-3,y+1,9,1);
-    ctx.fillRect(x+1,y-3,1,9);
-}
+/* ================= LUNA ================= */
+ctx.beginPath();
+ctx.arc(W-120,90,35,0,Math.PI*2);
+ctx.fillStyle="#f5e6a8";
+ctx.fill();
 
-function dibujarEstrellas(){
-    for(let i=0;i<40;i++){
-        estrella(Math.random()*800,Math.random()*250);
+ctx.beginPath();
+ctx.arc(W-105,85,30,0,Math.PI*2);
+ctx.fillStyle="#1b2550";
+ctx.fill();
+
+/* ================= EDIFICIOS ================= */
+function edificio(x,y,w,h,color){
+  ctx.fillStyle=color;
+  ctx.fillRect(x,y,w,h);
+
+  ctx.fillStyle="#ffe66d";
+  for(let i=10;i<w-10;i+=20){
+    for(let j=10;j<h-10;j+=25){
+      ctx.fillRect(x+i,y+j,8,8);
     }
-
-    // Líneas horizontales decorativas
-    ctx.strokeStyle="#6ec6ff";
-    ctx.lineWidth=2;
-    ctx.beginPath();
-    ctx.moveTo(50,120);
-    ctx.lineTo(250,120);
-    ctx.stroke();
-
-    ctx.beginPath();
-    ctx.moveTo(400,160);
-    ctx.lineTo(700,160);
-    ctx.stroke();
+  }
 }
 
-/* =========================
-   3. LUNA CON BORDE
-=========================*/
-function dibujarLuna(){
-    ctx.beginPath();
-    ctx.fillStyle="#f5e6a9";
-    ctx.arc(700,90,35,0,Math.PI*2);
-    ctx.fill();
+edificio(60,220,90,180,"#5c6bc0");
+edificio(170,200,90,200,"#42a5f5");
+edificio(280,250,80,150,"#3f51b5");
+edificio(380,180,100,220,"#6c5ce7");
+edificio(500,230,90,170,"#26a69a");
+edificio(610,210,90,190,"#5c6bc0");
+edificio(720,250,100,150,"#42a5f5");
 
-    ctx.beginPath();
-    ctx.fillStyle="#1a1f4a";
-    ctx.arc(715,80,30,0,Math.PI*2);
-    ctx.fill();
+/* ================= PUENTE ================= */
+ctx.fillStyle="#9e9e9e";
+ctx.fillRect(0,330,W,40);
 
-    ctx.beginPath();
-    ctx.strokeStyle="#2d3250";
-    ctx.lineWidth=6;
-    ctx.arc(700,90,45,0,Math.PI*2);
-    ctx.stroke();
+/* ARCOS */
+function arco(x){
+  ctx.beginPath();
+  ctx.arc(x,370,70,Math.PI,0);
+  ctx.fillStyle="#2f6fb0";
+  ctx.fill();
 }
 
-/* =========================
-   4. EDIFICIOS VARIADOS
-=========================*/
-function edificioBase(x,y,w,h,color){
-    ctx.fillStyle=color;
-    ctx.fillRect(x,y,w,h);
+arco(200);
+arco(450);
+arco(700);
 
-    for(let i=0;i<h/25;i++){
-        for(let j=0;j<w/20;j++){
-            ctx.fillStyle="#f8e16c";
-            ctx.fillRect(x+8+j*20,y+10+i*25,6,8);
-        }
-    }
+/* TORRE CENTRAL */
+ctx.fillStyle="#d4c27a";
+ctx.fillRect(W/2-6,250,12,80);
+
+/* CABLES */
+ctx.strokeStyle="#d4c27a";
+ctx.lineWidth=3;
+
+function cable(x1,y1,x2,y2){
+  ctx.beginPath();
+  ctx.moveTo(x1,y1);
+  ctx.lineTo(x2,y2);
+  ctx.stroke();
 }
 
-function dibujarEdificios(){
+let topX = W/2;
+let topY = 250;
 
-    edificioBase(40,270,80,180,"#5f6caf");
-    edificioBase(130,240,70,210,"#4ea8de");
-    edificioBase(210,300,60,150,"#3a86ff");
+cable(topX,topY,200,330);
+cable(topX,topY,320,330);
+cable(topX,topY,580,330);
+cable(topX,topY,700,330);
 
-    // Torre central alta
-    edificioBase(290,200,90,250,"#6c63ff");
-    ctx.fillRect(330,160,10,40); // antena
+/* ================= AGUA ================= */
+ctx.fillStyle="#4fa3d1";
+ctx.fillRect(0,370,W,130);
 
-    // Edificio inclinado
-    ctx.beginPath();
-    ctx.moveTo(420,450);
-    ctx.lineTo(420,260);
-    ctx.lineTo(480,300);
-    ctx.lineTo(480,450);
-    ctx.fillStyle="#2ec4b6";
-    ctx.fill();
+/* LINEAS DEL AGUA */
+ctx.strokeStyle="#8fd3ff";
+ctx.lineWidth=2;
 
-    edificioBase(500,280,70,170,"#5f6caf");
-    edificioBase(580,260,60,190,"#4ea8de");
-    edificioBase(650,300,70,150,"#3a86ff");
+for(let i=0;i<40;i++){
+  let x = Math.random()*W;
+  let y = 380 + Math.random()*110;
+  ctx.beginPath();
+  ctx.moveTo(x,y);
+  ctx.lineTo(x+30,y);
+  ctx.stroke();
 }
 
-/* =========================
-   5. PUENTE REALISTA
-=========================*/
-function dibujarPuente(){
+/* ================= BOTES ================= */
+function bote(x,y){
+  ctx.fillStyle="#1c2a4a";
+  ctx.beginPath();
+  ctx.moveTo(x,y);
+  ctx.lineTo(x+80,y);
+  ctx.lineTo(x+60,y+25);
+  ctx.lineTo(x+20,y+25);
+  ctx.closePath();
+  ctx.fill();
 
-    // Base puente
-    ctx.fillStyle="#b0b0b0";
-    ctx.fillRect(0,400,800,40);
-
-    // Arcos
-    ctx.beginPath();
-    ctx.arc(200,440,70,Math.PI,0);
-    ctx.arc(400,440,70,Math.PI,0);
-    ctx.arc(600,440,70,Math.PI,0);
-    ctx.fill();
-
-    // Torre central del puente
-    ctx.beginPath();
-    ctx.moveTo(400,400);
-    ctx.lineTo(400,330);
-    ctx.strokeStyle="#f5e6a9";
-    ctx.lineWidth=4;
-    ctx.stroke();
-
-    // Cables
-    ctx.beginPath();
-    ctx.moveTo(400,330);
-    ctx.lineTo(200,400);
-    ctx.moveTo(400,330);
-    ctx.lineTo(600,400);
-    ctx.stroke();
+  ctx.fillStyle="#ffe66d";
+  ctx.fillRect(x+35,y-20,30,20);
 }
 
-/* =========================
-   6. RÍO CON REFLEJO
-=========================*/
-function dibujarRio(){
-    ctx.fillStyle="#4ea8de";
-    ctx.fillRect(0,440,800,110);
-
-    for(let i=0;i<50;i++){
-        ctx.fillStyle="#90e0ef";
-        ctx.fillRect(Math.random()*800,460+Math.random()*70,40,2);
-    }
-}
-
-/* =========================
-   7. BARCOS MÁS PARECIDOS
-=========================*/
-function barco(x,y){
-    ctx.fillStyle="#1b263b";
-    ctx.beginPath();
-    ctx.moveTo(x,y);
-    ctx.lineTo(x+100,y);
-    ctx.lineTo(x+80,y+25);
-    ctx.lineTo(x+20,y+25);
-    ctx.closePath();
-    ctx.fill();
-
-    ctx.fillStyle="#f8e16c";
-    ctx.fillRect(x+35,y-20,30,20);
-}
-
-function dibujarBarcos(){
-    barco(150,500);
-    barco(500,500);
-}
-
-/* =========================
-   FUNCIÓN PRINCIPAL
-=========================*/
-function dibujar(){
-    dibujarCielo();
-    dibujarEstrellas();
-    dibujarLuna();
-    dibujarEdificios();
-    dibujarPuente();
-    dibujarRio();
-    dibujarBarcos();
-}
-
-dibujar();
-/* =========================
-   PUENTE DETALLADO
-=========================*/
-function dibujarPuente(){
-
-    // Base superior del puente
-    ctx.fillStyle = "#a8a8a8";
-    ctx.fillRect(0,390,800,30);
-
-    // Línea superior barandal
-    ctx.strokeStyle = "#e8e2a8";
-    ctx.lineWidth = 3;
-    ctx.beginPath();
-    ctx.moveTo(0,390);
-    ctx.lineTo(800,390);
-    ctx.stroke();
-
-    // Arco central grande
-    ctx.beginPath();
-    ctx.arc(400,420,90,Math.PI,0);
-    ctx.fillStyle="#bdbdbd";
-    ctx.fill();
-
-    // Arco izquierdo
-    ctx.beginPath();
-    ctx.arc(200,420,75,Math.PI,0);
-    ctx.fill();
-
-    // Arco derecho
-    ctx.beginPath();
-    ctx.arc(600,420,75,Math.PI,0);
-    ctx.fill();
-
-    // Torre central
-    ctx.fillStyle="#e8e2a8";
-    ctx.fillRect(395,310,10,80);
-
-    // Cables diagonales
-    ctx.strokeStyle="#e8e2a8";
-    ctx.lineWidth=4;
-
-    ctx.beginPath();
-    ctx.moveTo(400,310);
-    ctx.lineTo(200,390);
-    ctx.stroke();
-
-    ctx.beginPath();
-    ctx.moveTo(400,310);
-    ctx.lineTo(600,390);
-    ctx.stroke();
-
-    // Cables internos adicionales
-    ctx.lineWidth=2;
-
-    for(let i=1;i<=4;i++){
-        ctx.beginPath();
-        ctx.moveTo(400,310);
-        ctx.lineTo(400 - i*40,390);
-        ctx.stroke();
-
-        ctx.beginPath();
-        ctx.moveTo(400,310);
-        ctx.lineTo(400 + i*40,390);
-        ctx.stroke();
-    }
-}
-
-/* =========================
-   RÍO CON REFLEJO REALISTA
-=========================*/
-function dibujarRio(){
-
-    // Agua base
-    ctx.fillStyle="#4ea8de";
-    ctx.fillRect(0,420,800,130);
-
-    // Reflejo del arco central
-    ctx.beginPath();
-    ctx.arc(400,420,90,0,Math.PI);
-    ctx.fillStyle="rgba(255,255,255,0.08)";
-    ctx.fill();
-
-    // Líneas horizontales de agua
-    ctx.strokeStyle="#90e0ef";
-    ctx.lineWidth=2;
-
-    for(let i=0;i<40;i++){
-        ctx.beginPath();
-        ctx.moveTo(Math.random()*800,450+Math.random()*90);
-        ctx.lineTo(Math.random()*800,450+Math.random()*90);
-        ctx.stroke();
-    }
-}
-
-function barco(x,y){
-
-    // Base
-    ctx.fillStyle="#1b263b";
-    ctx.beginPath();
-    ctx.moveTo(x,y);
-    ctx.lineTo(x+120,y);
-    ctx.lineTo(x+95,y+30);
-    ctx.lineTo(x+25,y+30);
-    ctx.closePath();
-    ctx.fill();
-
-    // Cabina
-    ctx.fillStyle="#f8e16c";
-    ctx.fillRect(x+45,y-25,35,25);
-
-    // Línea superior
-    ctx.strokeStyle="#000";
-    ctx.lineWidth=2;
-    ctx.stroke();
-}
+bote(150,430);
+bote(600,430);
